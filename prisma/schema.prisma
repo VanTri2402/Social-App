@@ -3,7 +3,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -120,45 +119,45 @@ enum NotificationType {
   COMMENT
 }
 
-// library models
-model Reader {
-  id String @id @default(cuid())
-  nane String
-  browwedDay DateTime?
-  returnDay DateTime?
-  createAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// // library models
+// model Reader {
+//   id String @id @default(cuid())
+//   nane String
+//   browwedDay DateTime?
+//   returnDay DateTime?
+//   createAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
 
-  books Book[] 
-}
-model Category {
-  id String  @id @default(cuid())
-  category String @unique
+//   books Book[] 
+// }
+// model Category {
+//   id String  @id @default(cuid())
+//   category String @unique
 
-  books BookCategory[] @relation("CategoryToBook")
-}
+//   books BookCategory[] @relation("CategoryToBook")
+// }
 
 
-model Book {
-  id String @id @default(cuid())
-  title String @unique
-  author String 
+// model Book {
+//   id String @id @default(cuid())
+//   title String @unique
+//   author String 
 
-  readerId String
-  reader Reader @relation(fields: [readerId] , references: [id])
+//   readerId String
+//   reader Reader @relation(fields: [readerId] , references: [id])
 
-  category BookCategory[] @relation("BookToCategory")
-}
+//   category BookCategory[] @relation("BookToCategory")
+// }
 
-model BookCategory {
-  id String @id @default(cuid())
-  bookId String
-  categoryId String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// model BookCategory {
+//   id String @id @default(cuid())
+//   bookId String
+//   categoryId String
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
 
-  book Book @relation("BookToCategory", fields: [bookId] , references: [id], onDelete: Cascade)
-  category Category @relation("CategoryToBook", fields: [categoryId], references: [id], onDelete: Cascade)
-  @@index([bookId, categoryId])
-  @@unique([bookId, categoryId]) // prevent same book-category association twice
-}
+//   book Book @relation("BookToCategory", fields: [bookId] , references: [id], onDelete: Cascade)
+//   category Category @relation("CategoryToBook", fields: [categoryId], references: [id], onDelete: Cascade)
+//   @@index([bookId, categoryId])
+//   @@unique([bookId, categoryId]) // prevent same book-category association twice
+// }

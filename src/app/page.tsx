@@ -7,8 +7,11 @@ import {
   UserButton,
 } from "@clerk/nextjs";
 import { ModeToggle } from "@/components/modeToggleTheme";
+import prisma from "@/lib/prisma";
 
-export default function Home() {
+export default async function Home() {
+  
+  await prisma
   return (
     <div className="m-4">
       <h1>Home Page Content</h1>
