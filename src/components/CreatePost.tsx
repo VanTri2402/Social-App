@@ -1,14 +1,15 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
-import { use, useState } from "react";
+import { useState } from "react";
 import { Card, CardContent } from "./ui/card";
-import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
-import { Button } from "./ui/button";
-import { ImageIcon, Loader2Icon, SendIcon } from "lucide-react";
+import { Avatar, AvatarImage } from "./ui/avatar";
 import { Textarea } from "./ui/textarea";
+import { ImageIcon, Loader2Icon, SendIcon } from "lucide-react";
+import { Button } from "./ui/button";
 import { createPost } from "@/acitons/post.action";
 import toast from "react-hot-toast";
+import ImageUpload from "./ImageUpload";
 
 function CreatePost() {
   const { user } = useUser();
@@ -16,23 +17,29 @@ function CreatePost() {
   const [imageUrl, setImageUrl] = useState("");
   const [isPosting, setIsPosting] = useState(false);
   const [showImageUpload, setShowImageUpload] = useState(false);
+
   const handleSubmit = async () => {
     if (!content.trim() && !imageUrl) return;
 
     setIsPosting(true);
     try {
       const result = await createPost(content, imageUrl);
-      if (result.success === true) {
+      if (result?.success) {
+        // reset the form
         setContent("");
         setImageUrl("");
         setShowImageUpload(false);
-        toast.success("Post created successfully !");
+
+        toast.success("Post created successfully");
       }
     } catch (error) {
+      console.error("Failed to create post:", error);
+      toast.error("Failed to create post");
     } finally {
       setIsPosting(false);
     }
   };
+
   return (
     <Card className="mb-6">
       <CardContent className="pt-6">
@@ -52,14 +59,14 @@ function CreatePost() {
 
           {(showImageUpload || imageUrl) && (
             <div className="border rounded-lg p-4">
-              {/* <ImageUpload
-              endpoint="postImage"
-              value={imageUrl}
-              onChange={(url) => {
-                setImageUrl(url);
-                if (!url) setShowImageUpload(false);
-              }}
-            /> */}
+              <ImageUpload
+                endpoint="postImage"
+                value={imageUrl}
+                onChange={(url) => {
+                  setImageUrl(url);
+                  if (!url) setShowImageUpload(false);
+                }}
+              />
             </div>
           )}
 
@@ -100,5 +107,4 @@ function CreatePost() {
     </Card>
   );
 }
-
 export default CreatePost;
