@@ -3,7 +3,7 @@
 import {
   getNotifications,
   markNotificationsAsRead,
-} from "./notifications.action";
+} from "../../acitons/notifications.action";
 import { NotificationsSkeleton } from "@/components/NotificationSkeleton";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
