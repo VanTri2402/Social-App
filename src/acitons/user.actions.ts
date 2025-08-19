@@ -67,6 +67,7 @@ export async function getRandomUsers() {
           { NOT: { id: userId } },
           {
             NOT: {
+              // người này có ít nhất một follower trùng với mình
               followers: {
                 some: {
                   followerId: userId,
@@ -78,16 +79,13 @@ export async function getRandomUsers() {
       },
       select: {
         id: true,
-        name: true,
-        username: true,
         image: true,
+        username: true,
+        name: true,
         _count: {
-          select: {
-            followers: true,
-          },
+          select: { followers: true },
         },
       },
-      take: 3,
     });
     return randomUsers;
   } catch (error) {
@@ -109,6 +107,7 @@ export async function toggleFollow(targetUserId: string) {
         },
       },
     });
+
     if (existingFollow) {
       await prisma.follows.delete({
         where: {
@@ -120,6 +119,7 @@ export async function toggleFollow(targetUserId: string) {
       });
     } else {
       await prisma.$transaction([
+        //khi follow duoc tao thi ta tao 2 model la notidfication va follows
         prisma.follows.create({
           data: {
             followerId: userId,
@@ -130,15 +130,15 @@ export async function toggleFollow(targetUserId: string) {
         prisma.notification.create({
           data: {
             type: "FOLLOW",
-            userId: targetUserId,
             creatorId: userId,
+            userId: targetUserId,
           },
         }),
       ]);
     }
-    return {success : true}
+    return { success: true };
   } catch (error) {
-    console.log('error in toggleFollow' , error)
-    return {success : false , error : "Error toggling follow"}
+    console.log("error in toggleFollow", error);
+    return { success: false, error: "Error toggling follow" };
   }
 }
